@@ -22,7 +22,7 @@ export const Content = styled.section`
     flex-direction: column;
 
     @media (max-width: 768px) {
-        width: 100%;
+        width: 60%;
         justify-content: center;
         align-items: center;
     }
@@ -98,9 +98,18 @@ export const ErrorMessage = styled.span`
     font-size: 10px;
 `;
 
+export const StrongText = styled.span`
+    color: #3164E5;
+    cursor: pointer;
+    font-weight: bold;
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
 export const LabelSignup = styled.p`
-    font-size: 10px;
-    color: hsl(246, 25%, 77%);
+    font-size: 14px;
+    color: #757575;
     text-align: center;
-    margin: auto;
+    margin-top: 25px;
 `;
