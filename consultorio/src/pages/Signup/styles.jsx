@@ -6,6 +6,9 @@ export const Container = styled.main`
   align-items: center;
   min-height: 100vh;
   background-color: #3164E5; 
+  background-image: url('/background.jpg'); /* Caminho correto */
+  background-size: cover;
+  background-position: center;
 `;
 
 export const Content = styled.section`

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import InputMask from 'react-input-mask';
 import * as C from "./styles";
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -25,12 +26,13 @@ const Signin = () => {
 
             <C.FormGroup>
               {error && <C.ErrorMessage>{error}</C.ErrorMessage>}
-              <Input
-                type="cpf" // Define o tipo como "cpf"
-                placeholder="Digite seu CPF"
+              <InputMask
+                mask="999.999.999-99"
                 value={cpf}
                 onChange={(e) => [setCpf(e.target.value), setError("")]}
-              />
+              >
+                {(inputProps) => <Input {...inputProps} placeholder="Digite seu CPF" />}
+              </InputMask>
             </C.FormGroup>
 
             <C.FormGroup>

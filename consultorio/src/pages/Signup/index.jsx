@@ -1,4 +1,3 @@
-import React from 'react';
 import * as C from './styles';
 import Button from '../../components/Button';
 import { FaUser, FaStethoscope } from 'react-icons/fa'; // Ícones para Paciente e Médico
