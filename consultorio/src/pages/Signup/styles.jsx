@@ -6,7 +6,7 @@ export const Container = styled.main`
   align-items: center;
   min-height: 100vh;
   background-color: #3164E5; 
-  background-image: url('/background.jpg'); /* Caminho correto */
+  background-image: url('/background.jpg'); 
   background-size: cover;
   background-position: center;
 `;
@@ -42,10 +42,10 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 45%; /* Ajusta a largura da coluna do botão e ícone */
+  width: 45%; 
 
   svg {
-    margin-bottom: 20px; /* Espaço entre o ícone e o botão */
+    margin-bottom: 20px; 
     color: #3164E5;
   }
 `;

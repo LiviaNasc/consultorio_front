@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import InputMask from 'react-input-mask'; // Importe o InputMask
+import InputMask from 'react-input-mask'; 
 import * as C from "./styles";
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -59,8 +59,26 @@ const SignupPaciente = () => {
         setDataNascimentoType('date');
     }
 
+    const validateForm = () => {
+        const errors = [];
+        if (!nomePaciente) errors.push('Nome do paciente');
+        if (!cpf) errors.push('CPF');
+        if (!dataNascimento) errors.push('Data de nascimento');
+        if (!email) errors.push('E-mail');
+        if (!genero) errors.push('Gênero');
+        if (!telefone) errors.push('Telefone');
+        if (!senha) errors.push('Senha');
+        return errors;
+    }
+
     const handleSubmitPaciente = async (e) => {
         e.preventDefault();
+    
+        const errors = validateForm();
+        if (errors.length > 0) {
+            setError(`Campos faltando: ${errors.join(', ')}`);
+            return;
+        }
     
         const data = {
             user_name: nomePaciente,
@@ -68,9 +86,9 @@ const SignupPaciente = () => {
             user_password: senha,
             user_email: email,
             user_data_nasc: dataNascimento,
-            user_type: 'paciente',  // Tipo do usuário é paciente
+            user_type: 'paciente',  
             user_genero: genero,
-            user_telefone: telefone // Você pode adicionar um campo de telefone ou deixá-lo fixo
+            user_telefone: telefone 
         };
     
         try {
@@ -86,11 +104,9 @@ const SignupPaciente = () => {
             if (!response.ok) {
                 console.log(result);
                 throw new Error('Erro no cadastro 1');
-            } else{
+            } else {
                 navigate('/signin');
             }
-    
-            
         } catch (error) {
             setError('Erro ao cadastrar paciente');
             console.error(error);
@@ -113,7 +129,6 @@ const SignupPaciente = () => {
                 </C.FormGroup>
 
                 <C.FormGroup>
-                  
                     <InputMask
                         mask="999.999.999-99"
                         value={cpf}
@@ -185,10 +200,10 @@ const SignupPaciente = () => {
                 </C.FormGroup>
                 
                 {error && <C.ErrorMessage>{error}</C.ErrorMessage>}
-                <Button Text='Cadastrar' onClick={handleSubmitPaciente} />
+                <Button Text='Cadastrar' onClick={handleSubmitPaciente} style={{backgroundColor: '#1b987b'}} />
 
                 <C.LabelSignup>
-                    Ainda não possui uma conta?{" "}
+                    Já possui uma conta?{" "}
                     <C.StrongText onClick={() => navigate("/signin")}>Faça login</C.StrongText>
                 </C.LabelSignup>
                 

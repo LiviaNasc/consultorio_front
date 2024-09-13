@@ -1,6 +1,6 @@
 import * as C from './styles';
 import Button from '../../components/Button';
-import { FaUser, FaStethoscope } from 'react-icons/fa'; // Ícones para Paciente e Médico
+import { FaUser, FaStethoscope } from 'react-icons/fa'; 
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {

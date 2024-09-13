@@ -5,7 +5,7 @@ export const Container = styled.main`
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 0px 160px;
+    padding: 40px 160px;
     background-color: #1b987b /*#3164E5*/;
     background-size: cover;
     overflow: auto;
@@ -34,18 +34,18 @@ export const FormGroup = styled.div`
 `;
 
 export const FormTitle = styled.h2`
-    color: #3164E5;
+    color: #1b987b /*#3164E5*/;
     text-align: center;
     margin-bottom: 20px;
 `;
 
 export const ErrorMessage = styled.span`
     color: hsl(0, 100%, 74%);
-    font-size: 10px;
+    font-size: 13px;
 `;
 
 export const StrongText = styled.span`
-    color: #3164E5;
+    color: #1b987b /*#3164E5*/;
     cursor: pointer;
     font-weight: bold;
     &:hover {

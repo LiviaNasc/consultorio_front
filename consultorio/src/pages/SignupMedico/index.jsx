@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import InputMask from 'react-input-mask'; // Importe o InputMask
+import InputMask from 'react-input-mask'; 
 import * as C from "./styles";
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -67,8 +67,28 @@ const SignupMedico = () => {
         setDataNascimentoType('date');
     }
 
+    const validateForm = () => {
+        const errors = [];
+        if (!nomeMedico) errors.push('Nome do médico');
+        if (!cpf) errors.push('CPF');
+        if (!dataNascimento) errors.push('Data de nascimento');
+        if (!email) errors.push('E-mail');
+        if (!genero) errors.push('Gênero');
+        if (!telefone) errors.push('Telefone');
+        if (!especialidade) errors.push('Especialidade');
+        if (!crm) errors.push('CRM');
+        if (!senha) errors.push('Senha');
+        return errors;
+    }
+
     const handleSubmitMedico = async (e) => {
         e.preventDefault();
+
+        const errors = validateForm();
+        if (errors.length > 0) {
+            setError(`Campos faltando: ${errors.join(', ')}`);
+            return;
+        }
 
         const data = {
             user_name: nomeMedico,
@@ -95,14 +115,11 @@ const SignupMedico = () => {
             if (!response.ok) {
                 console.log(result);
                 throw new Error(`Erro no cadastro ${result} res`);
-            } else{
-                navigate('/singin')
+            } else {
+                navigate('/signin');
             }
-
-           
-            // Redirecionar ou exibir mensagem de sucesso
         } catch (error) {
-            setError('Erro ao cadastrar médico ');
+            setError('Erro ao cadastrar médico');
             console.error(error);
         }
     };

@@ -41,7 +41,7 @@ export const FormTitle = styled.h2`
 
 export const ErrorMessage = styled.span`
     color: hsl(0, 100%, 74%);
-    font-size: 10px;
+    font-size: 13px;
 `;
 
 export const StrongText = styled.span`

@@ -1,5 +1,3 @@
-import React from "react";
-import MaskedInput from "react-text-mask";
 import * as C from "./styles";
 
 const Input = ({ mask, type, placeholder, value, name, onChange, style, onFocus, onBlur }) => {
