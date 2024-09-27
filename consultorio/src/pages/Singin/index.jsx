@@ -68,7 +68,13 @@ const Signin = () => {
                 if (!response.ok) {
                   throw new Error(data.message || 'Erro na autenticação');
                 } else {
-                  navigate("/home");
+                  if (data.user.user_type === 'doctor') {
+                    localStorage.setItem('user_type', 'doctor');
+                    navigate("/home/medico");
+                  } else if (data.user.user_type === 'paciente') {
+                    localStorage.setItem('user_type', 'paciente');
+                    navigate("/home/paciente");
+                  }
                 }
 
                 console.log('Resposta do servidor:', data);

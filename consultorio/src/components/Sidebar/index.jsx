@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Container, Content } from './styles';
 import { 
@@ -17,7 +16,18 @@ const Sidebar = ({ active }) => {
     active(false);
   };
 
+  const handleHomeRedirect = () => {
+    const userType = localStorage.getItem('user_type');
+
+    if (userType === 'doctor') {
+      navigate('/home/medico');
+    } else if (userType === 'paciente') {
+      navigate('/home/paciente');
+    } 
+  };
+
   const handleLogout = () => {
+    localStorage.removeItem('user_type');
     navigate('/'); 
   };
 
@@ -25,8 +35,8 @@ const Sidebar = ({ active }) => {
     <Container sidebar={active}>
       <FaTimes onClick={closeSidebar} />  
       <Content>
-        <SidebarItem Icon={FaHome} Text="Home" />
-        <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" />
+        <SidebarItem Icon={FaHome} Text="Home" onClick={handleHomeRedirect}/>
+        <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" onClick={() => navigate('/agenda')} />
         <SidebarItem Icon={FaSignOutAlt} Text="Sair" onClick={handleLogout} /> 
       </Content>
     </Container>
