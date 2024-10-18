@@ -6,7 +6,7 @@ import * as C from './styles';
 const Consultas = () => {
   const [consultas, setConsultas] = useState([]);
   const [selectedConsulta, setSelectedConsulta] = useState(null);
-  const [medicoNome, setMedicoNome] = useState(''); 
+  const [pacienteNome, setPacienteNome] = useState(''); // Alterado para pacienteNome
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Consultas = () => {
       }
 
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/consultas/paciente/${userCpf}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/consultas/medico/${userCpf}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -35,36 +35,36 @@ const Consultas = () => {
     fetchConsultas();
   }, []);
 
-  // Função para buscar o nome do médico usando o CPF
-  const fetchMedicoNome = async (medicoCpf) => {
+  // Função para buscar o nome do paciente usando o CPF
+  const fetchPacienteNome = async (pacienteCpf) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/users/${medicoCpf}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/users/${pacienteCpf}`);
       const data = await response.json();
       if (response.ok) {
-        setMedicoNome(data.user_name); // Armazena o nome do médico
+        setPacienteNome(data.user_name); // Armazena o nome do paciente
       } else {
-        throw new Error('Erro ao buscar nome do médico');
+        throw new Error('Erro ao buscar nome do paciente');
       }
     } catch (error) {
-      console.error('Erro ao buscar nome do médico:', error);
-      setMedicoNome('Desconhecido');
+      console.error('Erro ao buscar nome do paciente:', error);
+      setPacienteNome('Desconhecido');
     }
   };
 
   const handleConsultaClick = (consulta) => {
     setSelectedConsulta(consulta);
-    fetchMedicoNome(consulta.medico); 
+    fetchPacienteNome(consulta.paciente); // Alterado para buscar o nome do paciente
   };
 
   const handleCloseModal = () => {
     setSelectedConsulta(null);
-    setMedicoNome(''); 
+    setPacienteNome(''); // Resetando o nome do paciente
   };
 
   return (
     <div>
       <Header />
-      <C.Title>Histórico de Consultas - Paciente</C.Title>
+      <C.Title>Histórico de Consultas - Médico</C.Title>
       {error && <C.ErrorMessage>{error}</C.ErrorMessage>}
       {consultas.length === 0 ? (
         <p>Nenhuma consulta encontrada.</p>
@@ -82,7 +82,7 @@ const Consultas = () => {
           ))}
         </C.ConsultasGrid>
       )}
-      {selectedConsulta && <Modal consulta={selectedConsulta} medicoNome={medicoNome} onClose={handleCloseModal} />}
+      {selectedConsulta && <Modal consulta={selectedConsulta} pacienteNome={pacienteNome} onClose={handleCloseModal} />} {/* Passando pacienteNome */}
     </div>
   );
 };

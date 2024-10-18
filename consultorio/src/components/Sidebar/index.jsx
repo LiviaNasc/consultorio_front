@@ -28,7 +28,18 @@ const Sidebar = ({ active }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('user_type');
+    localStorage.removeItem('user_cpf');
     navigate('/'); 
+  };
+
+  const handleConsultasRedirect = () => {
+    const userType = localStorage.getItem('user_type');
+
+    if (userType === 'doctor') {
+      navigate('/consultas/medico'); // Navega para ConsultasMedico
+    } else if (userType === 'paciente') {
+      navigate('/consultas'); // Navega para Consultas
+    } 
   };
 
   return (
@@ -37,7 +48,7 @@ const Sidebar = ({ active }) => {
       <Content>
         <SidebarItem Icon={FaHome} Text="Home" onClick={handleHomeRedirect}/>
         <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" onClick={() => navigate('/agenda')} />
-        <SidebarItem Icon={FaRegCalendarAlt} Text="Consultas" onClick={() => navigate('/consultas')} />
+        <SidebarItem Icon={FaRegCalendarAlt} Text="Consultas" onClick={handleConsultasRedirect} /> {/* Alterado para usar o novo manipulador */}
         <SidebarItem Icon={FaSignOutAlt} Text="Sair" onClick={handleLogout} /> 
       </Content>
     </Container>
