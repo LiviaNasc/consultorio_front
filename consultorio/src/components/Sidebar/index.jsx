@@ -37,6 +37,7 @@ const Sidebar = ({ active }) => {
       <Content>
         <SidebarItem Icon={FaHome} Text="Home" onClick={handleHomeRedirect}/>
         <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" onClick={() => navigate('/agenda')} />
+        <SidebarItem Icon={FaRegCalendarAlt} Text="Consultas" onClick={() => navigate('/consultas')} />
         <SidebarItem Icon={FaSignOutAlt} Text="Sair" onClick={handleLogout} /> 
       </Content>
     </Container>

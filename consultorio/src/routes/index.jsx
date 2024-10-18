@@ -9,6 +9,7 @@ import SignupMedico from '../pages/SignupMedico';
 import HomeMedico from '../pages/HomeMedico';
 import HomePaciente from '../pages/HomePaciente';
 import Agenda from '../pages/Agenda';
+import Consultas from '../pages/Consultas';
 
 const Private = ({ Item, allowedUserType }) => {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const RoutesApp = () => {
           <Route path="/signup/paciente" element={<SignupPaciente />} />
           <Route path="/signup/medico" element={<SignupMedico />} />
           <Route path="/agenda" element={<Agenda />} />
+          <Route path="/consultas" element={<Consultas />} />
           <Route path="*" element={<Signin />} />
         </Routes>
       </Fragment>

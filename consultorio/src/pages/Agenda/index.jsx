@@ -1,13 +1,15 @@
-import CalendarioMarcacao from '../../components/Calendario'
-import Header from '../../components/Header'
+import Header from '../../components/Header';
+import ListaMedicos from '../../components/Medicos';
 
-const agendar = () => {
+const Agendar = () => {
   return (
-    <div>
-        <Header />
-        <CalendarioMarcacao />
+    <div> 
+      <Header />
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+        <ListaMedicos />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default agendar
+export default Agendar;

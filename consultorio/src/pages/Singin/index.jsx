@@ -68,6 +68,7 @@ const Signin = () => {
                 if (!response.ok) {
                   throw new Error(data.message || 'Erro na autenticação');
                 } else {
+                  localStorage.setItem('user_cpf', data.user.user_cpf);
                   if (data.user.user_type === 'doctor') {
                     localStorage.setItem('user_type', 'doctor');
                     navigate("/home/medico");
