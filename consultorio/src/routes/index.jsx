@@ -11,6 +11,7 @@ import HomePaciente from '../pages/HomePaciente';
 import Agenda from '../pages/Agenda';
 import Consultas from '../pages/Consultas';
 import ConsultasMedico from '../pages/ConsultasMedico';
+import Agendar from '../pages/AgendaMedico';
 
 // Componente privado para páginas de paciente
 const PrivatePaciente = ({ Item }) => {
@@ -62,6 +63,7 @@ const RoutesApp = () => {
           <Route path="/signup/paciente" element={<SignupPaciente />} />
           <Route path="/signup/medico" element={<SignupMedico />} />
           <Route path="/agenda" element={<Agenda />} />
+          <Route path="/agenda/medico" element={<PrivateMedico Item={Agendar} />} />
           <Route path="/consultas" element={<PrivatePaciente Item={Consultas} />} /> {/* Para pacientes */}
           <Route path="/consultas/medico" element={<PrivateMedico Item={ConsultasMedico} />} /> {/* Para médicos */}
           <Route path="*" element={<Signin />} />

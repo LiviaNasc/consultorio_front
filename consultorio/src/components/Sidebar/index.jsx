@@ -42,12 +42,23 @@ const Sidebar = ({ active }) => {
     } 
   };
 
+  //agendamento de consultas
+  const handleAgendaRedirect = () => {
+      const userType = localStorage.getItem('user_type');
+  
+      if (userType === 'doctor') {
+        navigate('/agenda/medico');
+      } else if (userType === 'paciente') {
+        navigate('/agenda');
+      }
+    };
+
   return (
     <Container sidebar={active}>
       <FaTimes onClick={closeSidebar} />  
       <Content>
         <SidebarItem Icon={FaHome} Text="Home" onClick={handleHomeRedirect}/>
-        <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" onClick={() => navigate('/agenda')} />
+        <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" onClick={handleAgendaRedirect} />
         <SidebarItem Icon={FaRegCalendarAlt} Text="Consultas" onClick={handleConsultasRedirect} /> {/* Alterado para usar o novo manipulador */}
         <SidebarItem Icon={FaSignOutAlt} Text="Sair" onClick={handleLogout} /> 
       </Content>
