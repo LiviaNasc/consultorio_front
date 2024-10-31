@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Box = styled.div`
-  width: 60%;
+  width: 80%;
   background-color: #eaeae5;
   display: flex;
   flex-direction: column;
