@@ -2,63 +2,61 @@ import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import * as C from './styles';
+import { FaCalendarCheck, FaTimesCircle, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 
 const Consultas = () => {
   const [consultas, setConsultas] = useState([]);
   const [selectedConsulta, setSelectedConsulta] = useState(null);
-  const [medicoNome, setMedicoNome] = useState(''); 
   const [error, setError] = useState('');
 
+  const fetchConsultas = async () => {
+    const userCpf = localStorage.getItem('user_cpf');
+    if (!userCpf) {
+      setError('Usuário não autenticado.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/consultas/paciente/${userCpf}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Erro ao buscar consultas');
+      }
+
+      setConsultas(data);
+    } catch (error) {
+      console.error('Erro:', error);
+      setError(error.message);
+    }
+  };
+
   useEffect(() => {
-    const fetchConsultas = async () => {
-      const userCpf = localStorage.getItem('user_cpf');
-      if (!userCpf) {
-        setError('Usuário não autenticado.');
-        return;
-      }
-
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/consultas/paciente/${userCpf}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Erro ao buscar consultas');
-        }
-
-        setConsultas(data);
-      } catch (error) {
-        console.error('Erro:', error);
-        setError(error.message);
-      }
-    };
-
     fetchConsultas();
   }, []);
 
-  // Função para buscar o nome do médico usando o CPF
-  const fetchMedicoNome = async (medicoCpf) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/users/${medicoCpf}`);
-      const data = await response.json();
-      if (response.ok) {
-        setMedicoNome(data.user_name); // Armazena o nome do médico
-      } else {
-        throw new Error('Erro ao buscar nome do médico');
-      }
-    } catch (error) {
-      console.error('Erro ao buscar nome do médico:', error);
-      setMedicoNome('Desconhecido');
+  const getStatusIcon = (status) => {
+    switch (status.toLowerCase()) { // Simplificado para lidar com status em caixa baixa
+      case 'marcada':
+        return { icon: <FaCalendarCheck size={24} color="#3164e5" />, color: '#3164e5' };
+      case 'cancelada':
+        return { icon: <FaTimesCircle size={24} color="red" />, color: 'red' };
+      case 'concluída':
+        return { icon: <FaCheckCircle size={24} color="green" />, color: 'green' };
+      case 'atrasada':
+        return { icon: <FaExclamationTriangle size={24} color="orange" />, color: 'orange' };
+      default:
+        return { icon: null, color: 'black' };
     }
   };
 
   const handleConsultaClick = (consulta) => {
     setSelectedConsulta(consulta);
-    fetchMedicoNome(consulta.medico); 
   };
 
   const handleCloseModal = () => {
     setSelectedConsulta(null);
-    setMedicoNome(''); 
+    fetchConsultas();
   };
 
   return (
@@ -70,19 +68,29 @@ const Consultas = () => {
         <p>Nenhuma consulta encontrada.</p>
       ) : (
         <C.ConsultasGrid>
-          {consultas.map((consulta) => (
-            <C.ConsultaItem key={consulta.id} onClick={() => handleConsultaClick(consulta)}>
-              <p>
-                <strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}
-              </p>
-              <p>
-                <strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </C.ConsultaItem>
-          ))}
+          {consultas.map((consulta) => {
+            const { icon, color } = getStatusIcon(consulta.status); 
+            return (
+              <C.ConsultaItem 
+                key={consulta.id} 
+                onClick={() => handleConsultaClick(consulta)}
+                style={{ border: `2px solid ${color}` }} 
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p><strong>Nome do médico:</strong> {consulta.nome_medico}</p>
+                    <p><strong>Especialidade:</strong> {consulta.especialidade_medico}</p>
+                    <p><strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}</p>
+                    <p><strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+                  </div>
+                  <div style={{ marginLeft: '16px' }}>{icon}</div>
+                </div>
+              </C.ConsultaItem>
+            );
+          })}
         </C.ConsultasGrid>
       )}
-      {selectedConsulta && <Modal consulta={selectedConsulta} medicoNome={medicoNome} onClose={handleCloseModal} />}
+      {selectedConsulta && <Modal consulta={selectedConsulta} onClose={handleCloseModal} />}
     </div>
   );
 };
