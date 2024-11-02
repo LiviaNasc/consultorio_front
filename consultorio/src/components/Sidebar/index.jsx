@@ -30,6 +30,7 @@ const Sidebar = ({ active }) => {
   const handleLogout = () => {
     localStorage.removeItem('user_type');
     localStorage.removeItem('user_cpf');
+    localStorage.removeItem('user_name');
     navigate('/'); 
   };
 

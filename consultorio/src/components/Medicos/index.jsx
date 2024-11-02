@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as C from './styles';
-import { FaUserMd } from 'react-icons/fa';  
+import { FaUserMd, FaCheck, FaExchangeAlt  } from 'react-icons/fa';  
 import { useNavigate } from 'react-router-dom';
 
 const ListaMedicos = () => {
@@ -14,7 +14,6 @@ const ListaMedicos = () => {
   const [motivoConsulta, setMotivoConsulta] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(false);
 
-  // useEffect para buscar os médicos da API
   useEffect(() => {
     const fetchMedicos = async () => {
       try {
@@ -39,8 +38,19 @@ const ListaMedicos = () => {
   const handleDateChange = async (e) => {
     setSelectedDate(e.target.value);
 
-    // Busca os horários disponíveis para o médico e data selecionados
-    if (selectedMedico && e.target.value) {
+    const date = e.target.value;
+    setSelectedDate(date);
+    setHorariosDisponiveis([]); 
+    if (!isWeekday(date)) {
+      e.target.setCustomValidity("Por favor, selecione uma data entre segunda e sexta-feira.");
+      e.target.reportValidity(); 
+      return; 
+    } else {
+      e.target.setCustomValidity("");
+      e.target.reportValidity();
+    }
+
+    if (selectedMedico && e.target.value && date) {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/consultas/horarios/${selectedMedico}/${e.target.value}`);
         const data = await response.json();
@@ -59,13 +69,19 @@ const ListaMedicos = () => {
     setIsFormVisible(false);
   };
 
+  const isWeekday = (date) => {
+    const day = new Date(date + 'T00:00:00Z').getUTCDay(); 
+    return day !== 0 && day !== 6; 
+  };
+
+  const today = new Date().toISOString().split("T")[0];
+
   const handleAgendarConsulta = async () => {
     if (!selectedHorario || selectedHorario === '') {
     alert('Por favor, selecione um horário disponível.');
     return;
     }
 
-    // Criar o objeto para enviar na requisição com os campos especificados
     const consulta = {
       data_hora: selectedHorario,  
       motivo: motivoConsulta,      
@@ -74,7 +90,6 @@ const ListaMedicos = () => {
     };
 
     try {
-      // Requisição POST para marcar a consulta
       const response = await fetch('http://127.0.0.1:8000/api/consultas/marcar/', {
         method: 'POST',
         headers: {
@@ -118,24 +133,29 @@ const ListaMedicos = () => {
           <input type="text" value={medicoSelecionado?.user_cpf} readOnly />
 
           <label>Data da Consulta:</label>
-          <input type="date" value={selectedDate} onChange={handleDateChange} />
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            min={today}
+          />
 
           {horariosDisponiveis.length > 0 && (
             <>
-                <label>Horário da Consulta:</label>
-                <select 
+              <label>Horário da Consulta:</label>
+              <select 
                 value={selectedHorario} 
                 onChange={(e) => setSelectedHorario(e.target.value)}
-                >
+              >
                 <option value="">-- Selecione --</option>
                 {horariosDisponiveis.map((horario, index) => (
-                    <option key={index} value={horario}>
+                  <option key={index} value={horario}>
                     {new Date(horario).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                    </option>
+                  </option>
                 ))}
-                </select>
+              </select>
             </>
-            )}
+          )}
 
           <label>Motivo da Consulta:</label>
           <textarea 
@@ -144,11 +164,14 @@ const ListaMedicos = () => {
             onChange={(e) => setMotivoConsulta(e.target.value)}
           ></textarea>
 
-          <C.Button onClick={handleAgendarConsulta}>Confirmar Agendamento</C.Button>
-
-          <C.Button onClick={handleTrocarMedico}>
-            Trocar Médico
-          </C.Button>
+          <C.ButtonGroup>
+            <C.Button onClick={handleAgendarConsulta} className="confirmar">
+              <FaCheck /> Confirmar Agendamento
+            </C.Button>
+            <C.Button onClick={handleTrocarMedico} className="trocar">
+              <FaExchangeAlt /> Trocar Médico
+            </C.Button>
+          </C.ButtonGroup>
         </C.Form>
       ) : (
         <C.Box>
@@ -170,9 +193,11 @@ const ListaMedicos = () => {
             )}
           </select>
 
-          <C.Button onClick={handleMarcarConsulta}>
-            Marcar Consulta
-          </C.Button>
+          <C.ButtonGroup>
+            <C.Button onClick={handleMarcarConsulta} className="confirmar">
+              <FaCheck /> Marcar Consulta
+            </C.Button>
+          </C.ButtonGroup>
         </C.Box>
       )}
     </C.Container>

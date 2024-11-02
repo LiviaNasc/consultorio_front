@@ -45,7 +45,7 @@ const Signin = () => {
             </C.FormGroup>
 
             <Button Text='Entrar' onClick={async () => {
-              setError(""); // Limpa erros anteriores
+              setError(""); 
               if (!cpf || !senha) {
                 setError("CPF e senha são obrigatórios!");
                 return;
@@ -68,7 +68,9 @@ const Signin = () => {
                 if (!response.ok) {
                   throw new Error(data.message || 'Erro na autenticação');
                 } else {
+                  console.log("DATA USER:"+data.user);
                   localStorage.setItem('user_cpf', data.user.user_cpf);
+                  localStorage.setItem('user_name', data.user.user_name);
                   if (data.user.user_type === 'doctor') {
                     localStorage.setItem('user_type', 'doctor');
                     navigate("/home/medico");

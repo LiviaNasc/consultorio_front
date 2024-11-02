@@ -4,10 +4,12 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%; /* Ajuste para aumentar a largura do container */
 `;
 
 export const Box = styled.div`
-  width: 80%;
+  width: 90%; /* Aumenta a largura do Box */
+  max-width: 600px; /* Limita a largura máxima */
   background-color: #eaeae5;
   display: flex;
   flex-direction: column;
@@ -38,23 +40,42 @@ export const IconContainer = styled.div`
   align-items: center;
 `;
 
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px; /* Espaço entre os botões */
+  margin-top: 20px;
+`;
+
 export const Button = styled.button`
-  margin-top: 30px;
   padding: 10px 20px;
-  background-color: #fff;
-  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-
+  transition: background-color 0.3s;
+  
   &:hover {
-    background-color: #ddd;
+    opacity: 0.9;
+  }
+
+  &.confirmar {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+
+  &.trocar {
+    background-color: #FF5722;
+    color: #fff;
   }
 `;
 
 export const Form = styled.div`
-  width: 80%;
+  width: 90%;
+  max-width: 600px; /* Limita a largura máxima do formulário */
   background-color: #f5f5f5;
   padding: 35px;
   border-radius: 8px;
@@ -86,5 +107,4 @@ export const Form = styled.div`
     resize: none;
     height: 100px;
   }
-
 `;

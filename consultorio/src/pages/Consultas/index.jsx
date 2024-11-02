@@ -6,7 +6,9 @@ import { FaCalendarCheck, FaTimesCircle, FaCheckCircle, FaExclamationTriangle } 
 
 const Consultas = () => {
   const [consultas, setConsultas] = useState([]);
+  const [filteredConsultas, setFilteredConsultas] = useState([]);
   const [selectedConsulta, setSelectedConsulta] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
 
   const fetchConsultas = async () => {
@@ -25,6 +27,7 @@ const Consultas = () => {
       }
 
       setConsultas(data);
+      setFilteredConsultas(data);
     } catch (error) {
       console.error('Erro:', error);
       setError(error.message);
@@ -50,6 +53,22 @@ const Consultas = () => {
     }
   };
 
+  const normalizeCpf = (cpf) => cpf.replace(/[.-]/g, '');
+
+  const handleSearch = (event) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+  
+    const filtered = consultas.filter((consulta) => {
+      const cpfMedico = normalizeCpf(consulta.medico);
+      const nomeMedico = consulta.nome_medico.toLowerCase();
+      
+      return cpfMedico.includes(normalizeCpf(term)) || nomeMedico.includes(term);
+    });
+  
+    setFilteredConsultas(filtered);
+  };
+
   const handleConsultaClick = (consulta) => {
     setSelectedConsulta(consulta);
   };
@@ -63,33 +82,41 @@ const Consultas = () => {
     <div>
       <Header />
       <C.Title>Histórico de Consultas - Paciente</C.Title>
+      <C.SearchBarContainer>
+        <input
+          type="text"
+          placeholder="Pesquisar por CPF ou nome do medico"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </C.SearchBarContainer>
       {error && <C.ErrorMessage>{error}</C.ErrorMessage>}
-      {consultas.length === 0 ? (
-        <p>Nenhuma consulta encontrada.</p>
-      ) : (
-        <C.ConsultasGrid>
-          {consultas.map((consulta) => {
-            const { icon, color } = getStatusIcon(consulta.status); 
-            return (
-              <C.ConsultaItem 
-                key={consulta.id} 
-                onClick={() => handleConsultaClick(consulta)}
-                style={{ border: `2px solid ${color}` }} 
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p><strong>Nome do médico:</strong> {consulta.nome_medico}</p>
-                    <p><strong>Especialidade:</strong> {consulta.especialidade_medico}</p>
-                    <p><strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}</p>
-                    <p><strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
-                  </div>
-                  <div style={{ marginLeft: '16px' }}>{icon}</div>
+      {filteredConsultas.length === 0 ? (
+  <C.NoResultsMessage>Nenhuma consulta encontrada.</C.NoResultsMessage>
+    ) : (
+      <C.ConsultasGrid>
+        {filteredConsultas.map((consulta) => { 
+          const { icon, color } = getStatusIcon(consulta.status); 
+          return (
+            <C.ConsultaItem 
+              key={consulta.id} 
+              onClick={() => handleConsultaClick(consulta)}
+              style={{ border: `2px solid ${color}` }} 
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p><strong>Nome do médico:</strong> {consulta.nome_medico}</p>
+                  <p><strong>Especialidade:</strong> {consulta.especialidade_medico}</p>
+                  <p><strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}</p>
+                  <p><strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
-              </C.ConsultaItem>
-            );
-          })}
-        </C.ConsultasGrid>
-      )}
+                <div style={{ marginLeft: '16px' }}>{icon}</div>
+              </div>
+            </C.ConsultaItem>
+          );
+        })}
+      </C.ConsultasGrid>
+    )}
       {selectedConsulta && <Modal consulta={selectedConsulta} onClose={handleCloseModal} />}
     </div>
   );

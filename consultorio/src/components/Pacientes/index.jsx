@@ -1,32 +1,41 @@
-import { useState, useEffect } from 'react'; 
+import { useState } from 'react'; 
 import * as C from './styles';
 import { useNavigate } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
-
+import { FaCalendarCheck } from 'react-icons/fa';
 
 const ListaPacientes = () => {
   const navigate = useNavigate();
   const [selectedPaciente, setSelectedPaciente] = useState('');
-  const [pacienteNome, setPacienteNome] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
   const [selectedHorario, setSelectedHorario] = useState('');
   const [motivoConsulta, setMotivoConsulta] = useState('');
-  
-  const selectedMedico = localStorage.getItem('user_cpf'); // CPF do médico logado
+
+  const selectedMedico = localStorage.getItem('user_cpf');
   const cpfMask = [/[0-9]/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/];
 
-  const handlePacienteCpfChange = async (e) => {
+  const handlePacienteCpfChange = (e) => {
     const cpf = e.target.value;
     setSelectedPaciente(cpf);
   };
 
   const handleDateChange = async (e) => {
-    setSelectedDate(e.target.value);
+    const date = e.target.value;
+    setSelectedDate(date);
+    setHorariosDisponiveis([]); 
+    if (!isWeekday(date)) {
+      e.target.setCustomValidity("Por favor, selecione uma data entre segunda e sexta-feira.");
+      e.target.reportValidity(); 
+      return; 
+    } else {
+      e.target.setCustomValidity("");
+      e.target.reportValidity();
+    }
 
-    if (selectedMedico && e.target.value) {
+    if (selectedMedico && date) {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/consultas/horarios/${selectedMedico}/${e.target.value}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/consultas/horarios/${selectedMedico}/${date}`);
         const data = await response.json();
         setHorariosDisponiveis(data.horarios_disponiveis);
       } catch (error) {
@@ -34,6 +43,13 @@ const ListaPacientes = () => {
       }
     }
   };
+
+  const isWeekday = (date) => {
+    const day = new Date(date + 'T00:00:00Z').getUTCDay(); 
+    return day !== 0 && day !== 6; 
+  };
+
+  const today = new Date().toISOString().split("T")[0];
 
   const handleAgendarConsulta = async () => {
     if (!selectedHorario) {
@@ -75,15 +91,20 @@ const ListaPacientes = () => {
           
           <label>CPF do Paciente:</label>
           <MaskedInput
-          mask={cpfMask}
-          className="input-cpf"
-          placeholder="Digite o CPF do paciente"
-          value={selectedPaciente}
-          onChange={handlePacienteCpfChange}
-        />
+            mask={cpfMask}
+            className="input-cpf"
+            placeholder="Digite o CPF do paciente"
+            value={selectedPaciente}
+            onChange={handlePacienteCpfChange}
+          />
 
           <label>Data da Consulta:</label>
-          <input type="date" value={selectedDate} onChange={handleDateChange} />
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            min={today}
+          />
 
           {horariosDisponiveis.length > 0 && (
             <>
@@ -106,7 +127,10 @@ const ListaPacientes = () => {
             onChange={(e) => setMotivoConsulta(e.target.value)}
           ></textarea>
 
-          <C.Button onClick={handleAgendarConsulta}>Confirmar Agendamento</C.Button>
+          <C.Button onClick={handleAgendarConsulta}>
+            <FaCalendarCheck style={{ marginRight: '8px' }} />
+            Confirmar Agendamento
+          </C.Button>
         </C.Form>
     </C.Container>
   );

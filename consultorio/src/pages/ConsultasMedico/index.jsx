@@ -6,7 +6,9 @@ import { FaCalendarCheck, FaTimesCircle, FaCheckCircle, FaExclamationTriangle } 
 
 const Consultas = () => {
   const [consultas, setConsultas] = useState([]);
+  const [filteredConsultas, setFilteredConsultas] = useState([]);
   const [selectedConsulta, setSelectedConsulta] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
 
   const fetchConsultas = async () => {
@@ -25,6 +27,7 @@ const Consultas = () => {
       }
 
       setConsultas(data);
+      setFilteredConsultas(data);
     } catch (error) {
       console.error('Erro:', error);
       setError(error.message);
@@ -34,6 +37,22 @@ const Consultas = () => {
   useEffect(() => {
     fetchConsultas();
   }, []);
+
+  const normalizeCpf = (cpf) => cpf.replace(/[.-]/g, '');
+
+  const handleSearch = (event) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+  
+    const filtered = consultas.filter((consulta) => {
+      const cpfPaciente = normalizeCpf(consulta.paciente);
+      const nomePaciente = consulta.nome_paciente.toLowerCase();
+      
+      return cpfPaciente.includes(normalizeCpf(term)) || nomePaciente.includes(term);
+    });
+  
+    setFilteredConsultas(filtered);
+  };
 
   const getStatusIcon = (status) => {
     switch (status.toLowerCase()) { 
@@ -52,25 +71,31 @@ const Consultas = () => {
 
   const handleConsultaClick = (consulta) => {
     setSelectedConsulta(consulta);
-    
   };
 
   const handleCloseModal = () => {
     setSelectedConsulta(null);
     fetchConsultas();
-    
   };
 
   return (
     <div>
       <Header />
       <C.Title>Histórico de Consultas - Médico</C.Title>
+      <C.SearchBarContainer>
+        <input
+          type="text"
+          placeholder="Pesquisar por CPF ou nome do paciente"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </C.SearchBarContainer>
       {error && <C.ErrorMessage>{error}</C.ErrorMessage>}
-      {consultas.length === 0 ? (
-        <p>Nenhuma consulta encontrada.</p>
+      {filteredConsultas.length === 0 ? (
+        <C.NoResultsMessage>Nenhuma consulta encontrada.</C.NoResultsMessage>
       ) : (
         <C.ConsultasGrid>
-          {consultas.map((consulta) => {
+          {filteredConsultas.map((consulta) => {
             const { icon, color } = getStatusIcon(consulta.status); 
             return (
               <C.ConsultaItem 
@@ -81,6 +106,7 @@ const Consultas = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <p><strong>Nome do Paciente:</strong> {consulta.nome_paciente}</p>
+                    <p><strong>CPF:</strong> {consulta.paciente}</p>
                     <p><strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}</p>
                     <p><strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
                   </div>
