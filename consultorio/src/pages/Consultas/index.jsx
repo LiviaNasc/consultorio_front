@@ -36,7 +36,7 @@ const Consultas = () => {
   }, []);
 
   const getStatusIcon = (status) => {
-    switch (status.toLowerCase()) { // Simplificado para lidar com status em caixa baixa
+    switch (status.toLowerCase()) { 
       case 'marcada':
         return { icon: <FaCalendarCheck size={24} color="#3164e5" />, color: '#3164e5' };
       case 'cancelada':

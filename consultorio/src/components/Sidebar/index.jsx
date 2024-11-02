@@ -4,7 +4,8 @@ import {
   FaTimes, 
   FaHome, 
   FaRegCalendarAlt,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaUserMd
 } from 'react-icons/fa';
 
 import SidebarItem from '../SidebarItem';
@@ -36,9 +37,9 @@ const Sidebar = ({ active }) => {
     const userType = localStorage.getItem('user_type');
 
     if (userType === 'doctor') {
-      navigate('/consultas/medico'); // Navega para ConsultasMedico
+      navigate('/consultas/medico'); 
     } else if (userType === 'paciente') {
-      navigate('/consultas'); // Navega para Consultas
+      navigate('/consultas'); 
     } 
   };
 
@@ -58,8 +59,8 @@ const Sidebar = ({ active }) => {
       <FaTimes onClick={closeSidebar} />  
       <Content>
         <SidebarItem Icon={FaHome} Text="Home" onClick={handleHomeRedirect}/>
-        <SidebarItem Icon={FaRegCalendarAlt} Text="Agenda" onClick={handleAgendaRedirect} />
-        <SidebarItem Icon={FaRegCalendarAlt} Text="Consultas" onClick={handleConsultasRedirect} /> {/* Alterado para usar o novo manipulador */}
+        <SidebarItem Icon={FaRegCalendarAlt} Text="Agendar" onClick={handleAgendaRedirect} />
+        <SidebarItem Icon={FaUserMd} Text="Consultas" onClick={handleConsultasRedirect} /> 
         <SidebarItem Icon={FaSignOutAlt} Text="Sair" onClick={handleLogout} /> 
       </Content>
     </Container>
