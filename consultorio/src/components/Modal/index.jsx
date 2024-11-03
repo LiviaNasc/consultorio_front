@@ -27,9 +27,8 @@ const Modal = ({ consulta, onClose }) => {
           throw new Error('Erro ao cancelar a consulta.');
         }
 
-        console.log(`Consulta com id ${consulta.id} cancelada. Motivo: ${motivoCancelamento}`);
-        onClose(); // Fecha o modal após cancelar
-        setMotivoCancelamento(''); // Reseta o motivo do cancelamento
+        onClose();
+        setMotivoCancelamento(''); 
 
       } catch (error) {
         console.error(error);
