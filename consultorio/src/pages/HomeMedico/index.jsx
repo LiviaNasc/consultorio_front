@@ -5,13 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProntuarioModal from '../../components/ProntuarioModal';
+import ProntuarioViewModal from '../../components/ProntuarioViewModal';
 
 const HomeMedico = () => {
   const [medicoCPF] = useState(localStorage.getItem('user_cpf'));
   const [medicoNome] = useState(localStorage.getItem('user_name'));
   const [consultasHoje, setConsultasHoje] = useState([]);
   const [consultaSelecionada, setConsultaSelecionada] = useState(null);
+  const [prontuarios, setProntuarios] = useState([]);
   const [isProntuarioModalOpen, setProntuarioModalOpen] = useState(false);
+  const [prontuarioVisualizado, setProntuarioVisualizado] = useState(null);
 
   const navigate = useNavigate();
 
@@ -24,17 +27,42 @@ const HomeMedico = () => {
     }
   };
 
+  const fetchProntuarios = async (cpfPaciente) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/prontuarios/paciente/${cpfPaciente}`);
+      
+      setProntuarios(response.data);
+      console.log('Response recebida:', response.data);
+      console.log('Prontuários recebidos:', prontuarios);
+    } catch (error) {
+      console.error("Erro ao buscar prontuários do paciente:", error);
+    }
+  };
+
   useEffect(() => {
     fetchConsultasHoje();
   }, [medicoCPF]);
 
+  useEffect(() => {
+    console.log('Prontuários atualizados:', prontuarios);
+  }, [prontuarios]);
+
   const handleConsultaClick = (consulta) => {
-    
     setConsultaSelecionada(consulta);
+    fetchProntuarios(consulta.paciente);
   };
 
   const closeModal = () => {
     setConsultaSelecionada(null);
+    setProntuarios([]); 
+  };
+
+  const handleViewProntuario = (prontuario) => {
+    setProntuarioVisualizado(prontuario);
+  };
+  
+  const closeViewProntuarioModal = () => {
+    setProntuarioVisualizado(null);
   };
 
   const handleConfirm = async (consultaId) => {
@@ -93,7 +121,7 @@ const HomeMedico = () => {
             )}
           </C.ListContainer>
         </C.LeftSide>  
-
+  
         <C.RightSide>
           <C.InfoCard>
             <C.CardTitle>Agendar Consulta</C.CardTitle>
@@ -101,7 +129,8 @@ const HomeMedico = () => {
             <Button Text={"Agendar!"} onClick={() => navigate('/agenda/medico')} />
           </C.InfoCard>
         </C.RightSide>
-
+  
+        {/* Modal de detalhes da consulta */}
         {consultaSelecionada && (
           <C.ModalOverlay onClick={closeModal}>
             <C.ModalContent onClick={(e) => e.stopPropagation()}>
@@ -114,15 +143,48 @@ const HomeMedico = () => {
                 <p><strong>Motivo:</strong> {consultaSelecionada.motivo}</p>
                 <p><strong>Status:</strong> {consultaSelecionada.status}</p>
                 <p><strong>Hora:</strong> {new Date(consultaSelecionada.data_hora).toLocaleTimeString()}</p>
-                <Button Text={"Concluída"} onClick={() => handleConfirm(consultaSelecionada.id)} /> <Button Text={"Prontuário"} onClick={handleProntuarioOpen}/>
-
+                
+                <h4>Prontuários Anteriores:</h4>
+                <C.ProntuarioGrid>
+                  {prontuarios.length > 0 ? (
+                    prontuarios.map((prontuario, index) => (
+                      <C.ProntuarioItem
+                        key={index}
+                        onClick={() => handleViewProntuario(prontuario)}
+                      >
+                        <p><strong>Queixa:</strong> {prontuario.queixa_principal}</p>
+                      </C.ProntuarioItem>
+                    ))
+                  ) : (
+                    <p>Nenhum prontuário encontrado para este paciente.</p>
+                  )}
+                </C.ProntuarioGrid>
+  
+                <Button Text={"Concluída"} onClick={() => handleConfirm(consultaSelecionada.id)} /> 
+                <Button Text={"Prontuário"} onClick={handleProntuarioOpen}/>
+  
                 {isProntuarioModalOpen && (
-                  <ProntuarioModal onClose={() => setProntuarioModalOpen(false)} onSave={handleProntuarioSave} cpfPaciente={consultaSelecionada.paciente} nomePaciente={consultaSelecionada.nome_paciente} consultaId={consultaSelecionada.id}/>
+                  <ProntuarioModal 
+                    onClose={() => setProntuarioModalOpen(false)} 
+                    onSave={handleProntuarioSave} 
+                    cpfPaciente={consultaSelecionada.paciente} 
+                    nomePaciente={consultaSelecionada.nome_paciente} 
+                    consultaId={consultaSelecionada.id}
+                  />
                 )}
               </C.ModalBody>
             </C.ModalContent>
           </C.ModalOverlay>
         )}
+  
+        {/* Modal de visualização de prontuário */}
+        {prontuarioVisualizado && (
+          <ProntuarioViewModal 
+            prontuario={prontuarioVisualizado} 
+            onClose={closeViewProntuarioModal} 
+          />
+        )}
+        
       </C.Container> 
     </div>
   );

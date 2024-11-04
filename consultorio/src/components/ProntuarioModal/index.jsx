@@ -61,6 +61,7 @@ const ProntuarioModal = ({ onClose, onSave, cpfPaciente, nomePaciente, consultaI
         objetivo,
         peso: parseFloat(peso),  
         altura: parseFloat(altura), 
+        imc: calculateIMC(),
         pressao_arterial: pressaoArterial,
         frequencia_respiratoria: frequenciaRespiratoria,
         frequencia_cardiaca: frequenciaCardiaca,
@@ -79,7 +80,7 @@ const ProntuarioModal = ({ onClose, onSave, cpfPaciente, nomePaciente, consultaI
     console.log("Payload sendo enviado:", prontuarioData);
   
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/prontuarios/criar/', prontuarioData);
+      const response = await axios.post('http://127.0.0.1:8000/api/prontuarios/criar', prontuarioData);
       alert("Prontuário salvo com sucesso!");
       onSave(prontuarioData);
       onClose();

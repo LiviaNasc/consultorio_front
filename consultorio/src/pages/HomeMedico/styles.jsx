@@ -157,3 +157,19 @@ export const ModalBody = styled.div`
 `;
 
 
+export const ProntuarioGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+`;
+
+export const ProntuarioItem = styled.div`
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  &:hover {
+    background-color: #e6e6e6;
+  }
+`;
