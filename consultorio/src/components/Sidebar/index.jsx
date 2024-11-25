@@ -5,7 +5,8 @@ import {
   FaHome, 
   FaRegCalendarAlt,
   FaSignOutAlt,
-  FaUserMd
+  FaUserMd,
+  FaFolderOpen
 } from 'react-icons/fa';
 
 import SidebarItem from '../SidebarItem';
@@ -55,6 +56,12 @@ const Sidebar = ({ active }) => {
       }
     };
 
+  const handleProntuariosRedirect = () => {
+      navigate('/prontuarios');
+    };
+  
+  const userType = localStorage.getItem('user_type');
+
   return (
     <Container sidebar={active}>
       <FaTimes onClick={closeSidebar} />  
@@ -62,6 +69,9 @@ const Sidebar = ({ active }) => {
         <SidebarItem Icon={FaHome} Text="Home" onClick={handleHomeRedirect}/>
         <SidebarItem Icon={FaRegCalendarAlt} Text="Agendar" onClick={handleAgendaRedirect} />
         <SidebarItem Icon={FaUserMd} Text="Consultas" onClick={handleConsultasRedirect} /> 
+        {userType === 'paciente' && (
+          <SidebarItem Icon={FaFolderOpen} Text="Meus Prontuários" onClick={handleProntuariosRedirect} />
+        )}
         <SidebarItem Icon={FaSignOutAlt} Text="Sair" onClick={handleLogout} /> 
       </Content>
     </Container>

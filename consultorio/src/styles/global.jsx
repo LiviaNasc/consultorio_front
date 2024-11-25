@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     background-size: cover;
     font-family: 'Poppins', sans-serif;

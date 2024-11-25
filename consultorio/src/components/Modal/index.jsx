@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types'; 
 import * as C from './styles';
+import Swal from 'sweetalert2';
 
 const Modal = ({ consulta, onClose }) => { 
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
@@ -11,31 +12,50 @@ const Modal = ({ consulta, onClose }) => {
   const userType = localStorage.getItem('user_type'); 
   
   const handleCancel = async () => {
-    const confirmCancel = window.confirm("Você tem certeza que deseja cancelar esta consulta? Essa operação é irreversível.");
-    
-    if (confirmCancel) {
+    const confirmCancel = await Swal.fire({
+      title: 'Cancelar Consulta',
+      text: "Você tem certeza que deseja cancelar esta consulta? Essa operação é irreversível.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, cancelar!',
+      cancelButtonText: 'Voltar'
+    });
+  
+    if (confirmCancel.isConfirmed) {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/consultas/${consulta.id}/atualizar-status/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ status: 'cancelada'}), 
+          body: JSON.stringify({ status: 'cancelada' }), 
         });
-
+  
         if (!response.ok) {
           throw new Error('Erro ao cancelar a consulta.');
         }
-
+  
+        Swal.fire({
+          icon: 'success',
+          title: 'Consulta cancelada',
+          text: 'A consulta foi cancelada com sucesso.',
+        });
         onClose();
-        setMotivoCancelamento(''); 
-
+        setMotivoCancelamento('');
+  
       } catch (error) {
         console.error(error);
-        alert('Ocorreu um erro ao cancelar a consulta. Tente novamente.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao cancelar',
+          text: 'Ocorreu um erro ao cancelar a consulta. Tente novamente.',
+        });
       }
     }
   };
+  
 
   return (
     <C.ModalOverlay>

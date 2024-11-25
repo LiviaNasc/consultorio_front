@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProntuarioModal from '../../components/ProntuarioModal';
 import ProntuarioViewModal from '../../components/ProntuarioViewModal';
+import Swal from 'sweetalert2';
+
 
 const HomeMedico = () => {
   const [medicoCPF] = useState(localStorage.getItem('user_cpf'));
@@ -83,8 +85,12 @@ const HomeMedico = () => {
       }
     } catch (error) {
       console.error(error);
-      alert('Ocorreu um erro ao concluir a consulta. Tente novamente.');
-    }
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Ocorreu um erro ao concluir a consulta. Tente novamente.',
+        confirmButtonText: 'Fechar',
+      });    }
   };
 
   const handleProntuarioOpen = () => {
@@ -96,7 +102,7 @@ const HomeMedico = () => {
   };
 
   return (
-    <div>
+    <div style={{ position: 'fixed' ,  width: '100%'}}>
       <Header />
       <C.Container> 
         <C.LeftSide>

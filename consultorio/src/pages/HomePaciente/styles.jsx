@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.main`
     display: flex;
-    justify-content: space-between; /* Adiciona espaço entre os elementos */
+    justify-content: space-between;
     align-items: center;
     min-height: 100vh;
     padding: 0px 160px;
@@ -53,6 +53,15 @@ export const RightSide = styled.div`
     }
 `;
 
+export const InfoCard = styled.div`
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+`;
 
 export const Title = styled.h1`
     font-weight: 400;
@@ -71,5 +80,3 @@ export const Subtitle = styled.p`
     color: blue;
     margin-bottom: 5px;
 `;
-
-

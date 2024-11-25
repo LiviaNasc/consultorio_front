@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import * as C from './styles';
 import { FaUserMd, FaCheck, FaExchangeAlt  } from 'react-icons/fa';  
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 
 const ListaMedicos = () => {
   const navigate = useNavigate(); 
@@ -78,17 +80,22 @@ const ListaMedicos = () => {
 
   const handleAgendarConsulta = async () => {
     if (!selectedHorario || selectedHorario === '') {
-    alert('Por favor, selecione um horário disponível.');
-    return;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atenção',
+        text: 'Por favor, selecione um horário disponível.',
+        confirmButtonColor: '#007bff',
+      });
+      return;
     }
-
+  
     const consulta = {
-      data_hora: selectedHorario,  
-      motivo: motivoConsulta,      
-      paciente: pacienteCPF,       
-      medico: selectedMedico,      
+      data_hora: selectedHorario,
+      motivo: motivoConsulta,
+      paciente: pacienteCPF,
+      medico: selectedMedico,
     };
-
+  
     try {
       const response = await fetch('http://127.0.0.1:8000/api/consultas/marcar/', {
         method: 'POST',
@@ -97,19 +104,35 @@ const ListaMedicos = () => {
         },
         body: JSON.stringify(consulta),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        alert('Consulta marcada com sucesso!');
-        console.log('Consulta marcada:', data);
-        navigate('/home/paciente'); 
+        Swal.fire({
+          icon: 'success',
+          title: 'Sucesso',
+          text: 'Consulta marcada com sucesso!',
+          confirmButtonColor: '#007bff',
+        }).then(() => {
+          navigate('/home/paciente'); // Navega após confirmação
+        });
       } else {
-        alert('Erro ao marcar consulta. Tente novamente.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: 'Erro ao marcar consulta. Tente novamente.',
+          confirmButtonColor: '#007bff',
+        });
       }
     } catch (error) {
       console.error('Erro ao marcar consulta:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Ocorreu um erro inesperado. Por favor, tente novamente.',
+        confirmButtonColor: '#007bff',
+      });
     }
-  };
+  };  
 
   const medicoSelecionado = medicos.find(medico => medico.user_cpf === selectedMedico);
 

@@ -7,22 +7,22 @@ const HomePaciente = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-    <Header />
-    <C.Container> 
-      <C.LeftSide>
-        <C.Title>
-          Seja bem-vindo!
-        </C.Title>
-      </C.LeftSide>
-      <C.RightSide>
-        <C.Content>
-        <C.Subtitle>Confira os horários do nosso consultório:</C.Subtitle>
-        <Button Text={"Agendar!"} onClick={() => navigate('/agenda') }/>
-        </C.Content>
-      </C.RightSide>  
-    </C.Container> 
-    
+    <div style={{ position: 'fixed' ,  width: '100%'}}>
+      <Header />
+      <C.Container> 
+        <C.LeftSide>
+          <C.Title>
+            Seja bem-vindo!
+          </C.Title>
+        </C.LeftSide>
+        
+        <C.RightSide>
+          <C.InfoCard> 
+            <C.Subtitle>Agende uma consulta com o médico de sua preferêcia</C.Subtitle>
+            <Button Text={"Agendar!"} onClick={() => navigate('/agenda') }/>
+          </C.InfoCard>
+        </C.RightSide>  
+      </C.Container> 
     </div>
   );
 }

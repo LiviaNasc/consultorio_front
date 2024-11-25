@@ -3,6 +3,8 @@ import * as C from './styles';
 import { useNavigate } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import { FaCalendarCheck } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+
 
 const ListaPacientes = () => {
   const navigate = useNavigate();
@@ -53,17 +55,22 @@ const ListaPacientes = () => {
 
   const handleAgendarConsulta = async () => {
     if (!selectedHorario) {
-      alert('Por favor, selecione um horário disponível.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Horário não selecionado',
+        text: 'Por favor, selecione um horário disponível.',
+        confirmButtonColor: '#007bff',
+      });
       return;
     }
-
+  
     const consulta = {
       data_hora: selectedHorario,
       motivo: motivoConsulta,
       paciente: selectedPaciente,
       medico: selectedMedico,
     };
-
+  
     try {
       const response = await fetch('http://127.0.0.1:8000/api/consultas/marcar/', {
         method: 'POST',
@@ -72,15 +79,32 @@ const ListaPacientes = () => {
         },
         body: JSON.stringify(consulta),
       });
-
+  
       if (response.ok) {
-        alert('Consulta marcada com sucesso!');
-        navigate('/home/medico');
+        Swal.fire({
+          icon: 'success',
+          title: 'Consulta marcada!',
+          text: 'A consulta foi marcada com sucesso!',
+          confirmButtonColor: '#007bff',
+        }).then(() => {
+          navigate('/home/medico');
+        });
       } else {
-        alert('Erro ao marcar consulta. Tente novamente.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao marcar consulta',
+          text: 'Confira os campos do formulário.',
+          confirmButtonColor: '#007bff',
+        });
       }
     } catch (error) {
       console.error('Erro ao marcar consulta:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro de conexão',
+        text: 'Não foi possível conectar ao servidor.',
+        confirmButtonColor: '#007bff',
+      });
     }
   };
 

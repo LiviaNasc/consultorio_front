@@ -79,7 +79,7 @@ const Consultas = () => {
   };
 
   return (
-    <div>
+    <div >
       <Header />
       <C.Title>Histórico de Consultas - Médico</C.Title>
       <C.SearchBarContainer>

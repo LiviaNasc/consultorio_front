@@ -12,6 +12,7 @@ const Header = () => {
     <Container>
       <FaBars onClick={showSiderbar} />
       {sidebar && <Sidebar active={setSidebar} />}
+      <h2>Consultório Rodrigues</h2>
     </Container>
   )
 }

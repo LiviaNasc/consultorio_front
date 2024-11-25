@@ -1,8 +1,8 @@
-// ProntuarioModal.jsx
 import React, { useState } from 'react';
 import * as S from './styles';
 import Button from '../../components/Button';
 import axios from 'axios';
+import Swal from 'sweetalert2'; 
 
 const ProntuarioModal = ({ onClose, onSave, cpfPaciente, nomePaciente, consultaId}) => {
   const [currentPage, setCurrentPage] = useState('anamnese');
@@ -81,12 +81,20 @@ const ProntuarioModal = ({ onClose, onSave, cpfPaciente, nomePaciente, consultaI
   
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/prontuarios/criar', prontuarioData);
-      alert("Prontuário salvo com sucesso!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Sucesso!',
+        text: 'Prontuário salvo com sucesso!'
+      });
       onSave(prontuarioData);
       onClose();
     } catch (error) {
       console.error("Erro ao salvar o prontuário:", error.response?.data || error.message);
-      alert("Erro ao salvar o prontuário. Verifique os dados e tente novamente.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro!',
+        text: 'Erro ao salvar o prontuário. Verifique os dados e tente novamente.'
+      });
     }
   };
 
