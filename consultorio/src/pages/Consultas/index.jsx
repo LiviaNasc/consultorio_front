@@ -108,8 +108,8 @@ const Consultas = () => {
                   <p><strong>Nome do médico:</strong> {consulta.nome_medico}</p>
                   <p><strong>Especialidade:</strong> {consulta.especialidade_medico}</p>
                   <p><strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}</p>
-                  <p><strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
-                </div>
+                  <p><strong>Hora:</strong> {consulta.data_hora.split('T')[1].slice(0, 5)}</p>
+                  </div>
                 <div style={{ marginLeft: '16px' }}>{icon}</div>
               </div>
             </C.ConsultaItem>

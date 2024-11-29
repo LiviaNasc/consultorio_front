@@ -108,7 +108,7 @@ const Consultas = () => {
                     <p><strong>Nome do Paciente:</strong> {consulta.nome_paciente}</p>
                     <p><strong>CPF:</strong> {consulta.paciente}</p>
                     <p><strong>Data:</strong> {new Date(consulta.data_hora).toLocaleDateString('pt-BR')}</p>
-                    <p><strong>Hora:</strong> {new Date(consulta.data_hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p><strong>Hora:</strong> {consulta.data_hora.split('T')[1].slice(0, 5)}</p>
                   </div>
                   <div style={{ marginLeft: '16px' }}>{icon}</div>
                 </div>
